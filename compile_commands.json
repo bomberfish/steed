@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/Users/hariz/steed/build",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/em++ -DASSETS_PATH=\\\"./\\\" -DGRAPHICS_API_OPENGL_ES2 -DPHYSAC_IMPLEMENTATION -DPLATFORM_WEB @CMakeFiles/Steed.dir/includes_CXX.rsp -DEMSCRIPTEN -o CMakeFiles/Steed.dir/sources/main.cpp.o -c /Users/hariz/steed/sources/main.cpp",
+  "file": "/Users/hariz/steed/sources/main.cpp",
+  "output": "CMakeFiles/Steed.dir/sources/main.cpp.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/raudio.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/raudio.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/raudio.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/raudio.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/rcore.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/rcore.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/rcore.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rcore.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/rmodels.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/rmodels.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/rmodels.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rmodels.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/rshapes.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/rshapes.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/rshapes.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rshapes.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/rtext.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/rtext.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/rtext.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rtext.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/rtextures.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/rtextures.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/rtextures.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/rtextures.c.o"
+},
+{
+  "directory": "/Users/hariz/steed/build/_deps/raylib-build/raylib",
+  "command": "/Users/hariz/emsdk/upstream/emscripten/emcc -DGRAPHICS_API_OPENGL_ES2 -DPLATFORM_WEB @CMakeFiles/raylib.dir/includes_C.rsp -fno-strict-aliasing -Werror=implicit-function-declaration -Werror=pointer-arith  -std=gnu99 -o CMakeFiles/raylib.dir/utils.c.o -c /Users/hariz/steed/build/_deps/raylib-src/src/utils.c",
+  "file": "/Users/hariz/steed/build/_deps/raylib-src/src/utils.c",
+  "output": "_deps/raylib-build/raylib/CMakeFiles/raylib.dir/utils.c.o"
+}
+]
