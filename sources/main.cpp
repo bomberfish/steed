@@ -146,10 +146,10 @@ void Hint(int level) {
         DrawText("You are the black square.\nThe brown square is your horse, "
                  "Jake.\n\nUse the left/right arrow keys to move.\nPress R to "
                  "reset if you get stuck.",
-                 20, 40, 20, DARKGRAY);
+                 20, 20, 20, DARKGRAY);
         break;
     case 2:
-        DrawText("Both you and Jake can jump. Press C to jump.", 20, 40, 20,
+        DrawText("Both you and Jake can jump. Press C to jump.", 20, 20, 20,
                  DARKGRAY);
         break;
     case 3:
@@ -159,7 +159,7 @@ void Hint(int level) {
                  20, 40, 20, DARKGRAY);
         break;
     case 4:
-        DrawText("Don't worry, you start with Jake in every level.", 20, 40, 20,
+        DrawText("Don't worry, you start with Jake in every level.", 20, 20, 20,
                  DARKGRAY);
         break;
     case 5:
@@ -169,8 +169,8 @@ void Hint(int level) {
     case 7:
         break;
     default:
-      DrawText(thanks.c_str(), 20, 40, 20, DARKGRAY);
-      break;
+        DrawText(thanks.c_str(), 20, 20, 20, DARKGRAY);
+        break;
     }
 }
 
@@ -228,6 +228,8 @@ int main(int argc, char *argv[]) {
     InitPhysics();
     SetPhysicsGravity(0, 1);
 
+    bool debug = false;
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         UpdatePhysics();
@@ -236,7 +238,14 @@ int main(int argc, char *argv[]) {
 
         ClearBackground(RAYWHITE);
         Hint(level);
-        DrawFPS(10, 10);
+
+        if (IsKeyPressed(KEY_D)) {
+            debug = !debug;
+        }
+
+        if (debug) {
+            DrawFPS(10, 10);
+        }
 
         PhysicsBody activeBody = onHorse ? horse : player;
 
@@ -393,32 +402,33 @@ int main(int argc, char *argv[]) {
                       player->position.y - PLAYER_SIZE / 2, PLAYER_SIZE,
                       PLAYER_SIZE, BLACK);
 
-        // Draw created physics bodies
-        int bodiesCount = GetPhysicsBodiesCount();
-        for (int i = 0; i < bodiesCount; i++) {
-            PhysicsBody body = GetPhysicsBody(i);
+        if (debug) {
+            // Draw created physics bodies
+            int bodiesCount = GetPhysicsBodiesCount();
+            for (int i = 0; i < bodiesCount; i++) {
+                PhysicsBody body = GetPhysicsBody(i);
 
-            if (body != NULL) {
-                int vertexCount = GetPhysicsShapeVerticesCount(i);
-                for (int j = 0; j < vertexCount; j++) {
-                    // Get physics bodies shape vertices to draw lines
-                    // Note: GetPhysicsShapeVertex() already calculates rotation
-                    // transformations
-                    Vector2 vertexA = GetPhysicsShapeVertex(body, j);
+                if (body != NULL) {
+                    int vertexCount = GetPhysicsShapeVerticesCount(i);
+                    for (int j = 0; j < vertexCount; j++) {
+                        // Get physics bodies shape vertices to draw lines
+                        // Note: GetPhysicsShapeVertex() already calculates
+                        // rotation transformations
+                        Vector2 vertexA = GetPhysicsShapeVertex(body, j);
 
-                    int jj = (((j + 1) < vertexCount)
-                                  ? (j + 1)
-                                  : 0); // Get next vertex or first to close the
-                                        // shape
-                    Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
+                        int jj = (((j + 1) < vertexCount)
+                                      ? (j + 1)
+                                      : 0); // Get next vertex or first to close
+                                            // the shape
+                        Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
 
-                    DrawLineV(
-                        vertexA, vertexB,
-                        GREEN); // Draw a line between two vertex positions
+                        DrawLineV(
+                            vertexA, vertexB,
+                            GREEN); // Draw a line between two vertex positions
+                    }
                 }
             }
         }
-
         EndDrawing();
     }
 

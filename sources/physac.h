@@ -977,27 +977,28 @@ static void InitTimerHiRes(void)
 }
 
 // Get hi-res MONOTONIC time measure in clock ticks
-static unsigned long long int GetClockTicks(void)
-{
-    unsigned long long int value = 0;
+static unsigned long long int GetClockTicks(void) {
+  unsigned long long int value = 0;
 
 #if defined(_WIN32)
-    QueryPerformanceCounter((unsigned long long int *) &value);
+  QueryPerformanceCounter((unsigned long long int *)&value);
 #endif
 
-#if defined(__linux__)
-    struct timespec now;
-    clock_gettime(CLOCK_MONOTONIC, &now);
-    value = (unsigned long long int)now.tv_sec*(unsigned long long int)1000000000 + (unsigned long long int)now.tv_nsec;
+// old was: #if defined(__linux__)
+#if defined(__EMSCRIPTEN__) || defined(__linux__)
+  struct timespec now;
+  clock_gettime(CLOCK_MONOTONIC, &now);
+  value =
+      (unsigned long long int)now.tv_sec * (unsigned long long int)1000000000 +
+      (unsigned long long int)now.tv_nsec;
 #endif
 
 #if defined(__APPLE__)
-    value = mach_absolute_time();
+  value = mach_absolute_time();
 #endif
 
-    return value;
+  return value;
 }
-
 // Get current time in milliseconds
 static double GetCurrentTime(void)
 {

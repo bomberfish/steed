@@ -6,7 +6,14 @@
     <title>uMessage</title>
     <style>
       /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-      canvas.emscripten { border: 0px none; background-color: black; }
+      canvas.emscripten { 
+        border: 0px none; 
+        background-color: black;
+        max-width: 100vw;
+        max-height: 100vh;
+        width: 100%!important;
+        aspect-ratio: 2 / 1!important;
+       }
 
       .spinner {
         height: 50px;
@@ -43,11 +50,12 @@
         padding:0;
         margin: 0;
         width: 100vw;
-        height: 100vh;
+        /* height: 100vh; */
         background-color: black;
         display: flex;
         justify-content: center;
         color: white;
+        aspect-ratio: 2 / 1!important;
       }
     </style>
   </head>
