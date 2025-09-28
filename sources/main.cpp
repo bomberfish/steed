@@ -160,7 +160,7 @@ void ConstructLevel(int level) {
                 (Vector2){SCREEN_WIDTH / 4 + 32.5, SCREEN_HEIGHT - 10}, SCREEN_WIDTH / 2 + 65,
                 20, 10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 - 180, SCREEN_HEIGHT - 80}, 200, 20,
+                (Vector2){SCREEN_WIDTH / 2 - 180, SCREEN_HEIGHT - 70}, 200, 20,
                 10),
             CreatePhysicsBodyRectangle(
                 (Vector2){SCREEN_WIDTH / 2 + 130, SCREEN_HEIGHT - 150}, 100, 20,
@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
     Sound annihilator = LoadSound("horse.wav");
     Sound death = LoadSound("biteof87.wav");
 
-    int level = 4;
+    int level = 1;
 
     if (argc > 1) {
         int argLevel = atoi(argv[1]);
