@@ -157,19 +157,19 @@ void ConstructLevel(int level) {
     case 5:
         levelSurfaces = {
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 4 + 32.5, SCREEN_HEIGHT - 10}, SCREEN_WIDTH / 2 + 65,
-                20, 10),
+            (Vector2){SCREEN_WIDTH / 4 + 32.5, SCREEN_HEIGHT - 10}, SCREEN_WIDTH / 2 + 65,
+            20, 10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 - 180, SCREEN_HEIGHT - 70}, 200, 20,
-                10),
+            (Vector2){SCREEN_WIDTH / 2 - 180, SCREEN_HEIGHT - 70}, 200, 20,
+            10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 + 130, SCREEN_HEIGHT - 150}, 100, 20,
-                10),
+            (Vector2){SCREEN_WIDTH / 2 + 130, SCREEN_HEIGHT - 150}, 100, 20,
+            10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH - 140, SCREEN_HEIGHT - 80}, 200, 20, 10),
+            (Vector2){SCREEN_WIDTH - 140, SCREEN_HEIGHT - 80}, 200, 20, 10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 195}, 50, 350,
-                10)};
+            (Vector2){SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 195}, 50, 200,
+            10)};
         break;
     case 6:
         levelSurfaces = {
@@ -303,6 +303,7 @@ int main(int argc, char *argv[]) {
     Sound death = LoadSound("biteof87.wav");
 
     int level = 1;
+    int deaths = 0;
 
     if (argc > 1) {
         int argLevel = atoi(argv[1]);
@@ -336,15 +337,20 @@ int main(int argc, char *argv[]) {
             DrawFPS(10, 10);
         }
 
+        DrawText(TextFormat("Deaths: %d", deaths), SCREEN_WIDTH - 120, 20, 20, BLACK);
+
         PhysicsBody activeBody = onHorse ? horse : player;
 
         if (IsKeyPressed(KEY_R)) {
+            PlaySound(death);
             printf("Reset!\n");
+            deaths++;
             SetInitialPositions();
         } else if (activeBody->position.y >= SCREEN_HEIGHT) {
             PlaySound(death);
             printf("You died!\n");
             // WaitTime(2.0f);
+            deaths++;
             SetInitialPositions();
         } else if (activeBody->position.x >=
                    SCREEN_WIDTH - (onHorse ? HORSE_SIZE : PLAYER_SIZE)) {
@@ -362,8 +368,6 @@ int main(int argc, char *argv[]) {
                 printf("Level %d\n", level);
             } else {
                 PlaySound(death);
-                printf("You died!\n");
-                // WaitTime(2.0f);
                 SetInitialPositions();
             }
         } else {
@@ -435,7 +439,7 @@ int main(int argc, char *argv[]) {
                 if (activeBody->velocity.x < -clampedSpeed)
                     activeBody->velocity.x = -clampedSpeed;
 
-                if (level > 1 && IsKeyPressed(KEY_C) && grounded) {
+                if ((debug || level > 1) && IsKeyPressed(KEY_C) && grounded) {
                     player->enabled = true;
                     activeBody->velocity.y = -tuning->jumpVelocity;
                     printf("Jump!\n");
@@ -443,7 +447,7 @@ int main(int argc, char *argv[]) {
                 }
             }
 
-            if (level > 2 && IsKeyPressed(KEY_X)) {
+            if ((debug || level > 2) && IsKeyPressed(KEY_X)) {
                 // dismount, jump off horse and then destroy horse
                 if (onHorse) {
                     onHorse = false;
@@ -461,6 +465,45 @@ int main(int argc, char *argv[]) {
                 // make player follow horse
                 player->position =
                     Vector2Subtract(horse->position, (Vector2){0, HORSE_SIZE});
+            }
+        }
+
+        if (debug) {
+            if (IsKeyDown(KEY_ONE)) {
+                level = 1;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_TWO)) {
+                level = 2;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_THREE)) {
+                level = 3;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_FOUR)) {
+                level = 4;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_FIVE)) {
+                level = 5;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_SIX)) {
+                level = 6;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else if (IsKeyDown(KEY_SEVEN)) {
+                level = 7;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
             }
         }
 
