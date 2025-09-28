@@ -13,6 +13,17 @@
 #define PLAYER_SIZE 12
 #define HORSE_SIZE 12
 
+#include <cmath>
+#include <math.h>
+
+#define SCREEN_WIDTH (960)
+#define SCREEN_HEIGHT (480)
+#define WINDOW_TITLE "Steed"
+
+// Player and horse size configuration
+#define PLAYER_SIZE 12
+#define HORSE_SIZE 12
+
 struct MovementTuning {
     float maxSpeed;
     float groundAcceleration;
@@ -30,6 +41,77 @@ static const MovementTuning HORSE_TUNING = {0.3f, 10.0f, 12.5f,
 
 static std::vector<PhysicsBody> levelSurfaces;
 
+static const float GROUND_DITHER_DENSITY = 0.35f;
+static const float HORSE_DITHER_DENSITY = 0.5f;
+
+static float Clamp01(float value) {
+    if (value < 0.0f)
+        return 0.0f;
+    if (value > 1.0f)
+        return 1.0f;
+    return value;
+}
+
+static void DrawCheckerboardRectangleV(Vector2 position, Vector2 size,
+                                       Color color, float density) {
+    const float clampedDensity = Clamp01(density);
+    if (clampedDensity <= 0.0f || size.x <= 0.0f || size.y <= 0.0f)
+        return;
+
+    if (clampedDensity >= 1.0f) {
+        ::DrawRectangleV(position, size, color);
+        return;
+    }
+
+    static const int PATTERN_SIZE = 4;
+    static const unsigned char BAYER_MATRIX[PATTERN_SIZE][PATTERN_SIZE] = {
+        {0, 8, 2, 10},
+        {12, 4, 14, 6},
+        {3, 11, 1, 9},
+        {15, 7, 13, 5},
+    };
+
+    const int maxThreshold = PATTERN_SIZE * PATTERN_SIZE;
+    int threshold = (int)floorf(clampedDensity * (float)maxThreshold);
+    if (threshold <= 0)
+        return;
+    if (threshold >= maxThreshold) {
+        ::DrawRectangleV(position, size, color);
+        return;
+    }
+
+    const float left = position.x;
+    const float top = position.y;
+    const float right = left + size.x;
+    const float bottom = top + size.y;
+
+    const int minX = (int)floorf(left);
+    const int minY = (int)floorf(top);
+    const int maxX = (int)ceilf(right);
+    const int maxY = (int)ceilf(bottom);
+
+    for (int y = minY; y < maxY; ++y) {
+        const float py = (float)y + 0.5f;
+        if (py < top || py >= bottom)
+            continue;
+        const int localY = (y - minY) % PATTERN_SIZE;
+        for (int x = minX; x < maxX; ++x) {
+            const float px = (float)x + 0.5f;
+            if (px < left || px >= right)
+                continue;
+            const int localX = (x - minX) % PATTERN_SIZE;
+            if (BAYER_MATRIX[localY][localX] < threshold) {
+                DrawPixel(x, y, color);
+            }
+        }
+    }
+}
+
+static void DrawCheckerboardRectangleV(Vector2 position, Vector2 size,
+                                       Color color) {
+    DrawCheckerboardRectangleV(position, size, color,
+                               Clamp01(color.a / 255.0f));
+}
 void ConstructLevel(int level) {
     for (PhysicsBody body : levelSurfaces) {
         if (body) {
@@ -58,15 +140,15 @@ void ConstructLevel(int level) {
                              (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10},
                              SCREEN_WIDTH, 20, 10),
                          CreatePhysicsBodyRectangle(
-                             (Vector2){SCREEN_WIDTH / 3, SCREEN_HEIGHT - 60},
-                             50, SCREEN_HEIGHT - 60, 10)};
+                             (Vector2){SCREEN_WIDTH / 3, SCREEN_HEIGHT - 140},
+                             50, SCREEN_HEIGHT - 240, 10)};
 
         break;
     case 4:
         levelSurfaces = {CreatePhysicsBodyRectangle(
                              (Vector2){160, SCREEN_HEIGHT - 10}, 320, 20, 10),
                          CreatePhysicsBodyRectangle(
-                             (Vector2){600, SCREEN_HEIGHT - 10}, 280, 20, 10),
+                             (Vector2){600, SCREEN_HEIGHT - 10}, 200, 20, 10),
                          CreatePhysicsBodyRectangle(
                              (Vector2){440, SCREEN_HEIGHT - 100}, 120, 20, 10),
                          CreatePhysicsBodyRectangle(
@@ -75,18 +157,18 @@ void ConstructLevel(int level) {
     case 5:
         levelSurfaces = {
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2, SCREEN_HEIGHT - 10}, SCREEN_WIDTH,
+                (Vector2){SCREEN_WIDTH / 4 + 32.5, SCREEN_HEIGHT - 10}, SCREEN_WIDTH / 2 + 65,
                 20, 10),
             CreatePhysicsBodyRectangle(
                 (Vector2){SCREEN_WIDTH / 2 - 180, SCREEN_HEIGHT - 80}, 200, 20,
                 10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 + 130, SCREEN_HEIGHT - 150}, 220, 20,
+                (Vector2){SCREEN_WIDTH / 2 + 130, SCREEN_HEIGHT - 150}, 100, 20,
                 10),
             CreatePhysicsBodyRectangle(
                 (Vector2){SCREEN_WIDTH - 140, SCREEN_HEIGHT - 80}, 200, 20, 10),
             CreatePhysicsBodyRectangle(
-                (Vector2){SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 110}, 50, 200,
+                (Vector2){SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 195}, 50, 350,
                 10)};
         break;
     case 6:
@@ -143,24 +225,24 @@ void Hint(int level) {
     thanks += "\n\nCreated by bomberfish for Hack Club Daydream 2025.";
     switch (level) {
     case 1:
-        DrawText("You are the black square.\nThe brown square is your horse, "
+        DrawText("You are the black square.\nThe grey square underneath you is your horse, "
                  "Jake.\n\nUse the left/right arrow keys to move.\nPress R to "
                  "reset if you get stuck.",
-                 20, 20, 20, DARKGRAY);
+                 20, 20, 20, BLACK);
         break;
     case 2:
         DrawText("Both you and Jake can jump. Press C to jump.", 20, 20, 20,
-                 DARKGRAY);
+                 BLACK);
         break;
     case 3:
         DrawText("Oh no! That wall looks too high...\nLooks like you'll have "
                  "to sacrifice Jake.\nPress X (the one next to C, not H) in "
                  "mid-air to jump off and gain some extra height.",
-                 20, 40, 20, DARKGRAY);
+                 20, 40, 20, BLACK);
         break;
     case 4:
         DrawText("Don't worry, you start with Jake in every level.", 20, 20, 20,
-                 DARKGRAY);
+                 BLACK);
         break;
     case 5:
         break;
@@ -169,7 +251,7 @@ void Hint(int level) {
     case 7:
         break;
     default:
-        DrawText(thanks.c_str(), 20, 20, 20, DARKGRAY);
+        DrawText(thanks.c_str(), 20, 20, 20, BLACK);
         break;
     }
 }
@@ -208,12 +290,19 @@ void SetInitialPositions() {
     }
 }
 
+
+
 int main(int argc, char *argv[]) {
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
     // SetTargetFPS(60);
     SetConfigFlags(FLAG_VSYNC_HINT);
+    InitAudioDevice();
 
-    int level = 1;
+    Sound jump = LoadSound("jump.wav");
+    Sound annihilator = LoadSound("horse.wav");
+    Sound death = LoadSound("biteof87.wav");
+
+    int level = 5;
 
     if (argc > 1) {
         int argLevel = atoi(argv[1]);
@@ -254,6 +343,8 @@ int main(int argc, char *argv[]) {
             SetInitialPositions();
         } else if (activeBody->position.y >= SCREEN_HEIGHT) {
             SetInitialPositions();
+            printf("You died!\n");
+            PlaySound(death);
         } else if (activeBody->position.x >=
                    SCREEN_WIDTH - (onHorse ? HORSE_SIZE : PLAYER_SIZE)) {
             level++;
@@ -340,6 +431,7 @@ int main(int argc, char *argv[]) {
                     player->enabled = true;
                     activeBody->velocity.y = -tuning->jumpVelocity;
                     printf("Jump!\n");
+                    PlaySound(jump);
                 }
             }
 
@@ -353,6 +445,7 @@ int main(int argc, char *argv[]) {
                     DestroyPhysicsBody(horse);
                     horse = NULL;
                     printf("!!! THE HORSE HAS BEEN DESTROYED !!!\n");
+                    PlaySound(annihilator);
                 }
             }
 
@@ -390,13 +483,15 @@ int main(int argc, char *argv[]) {
                 if (vertex.y > maxY)
                     maxY = vertex.y;
             }
-            DrawRectangleV((Vector2){minX, minY},
-                           (Vector2){maxX - minX, maxY - minY}, DARKGRAY);
+            DrawCheckerboardRectangleV((Vector2){minX, minY},
+                                       (Vector2){maxX - minX, maxY - minY},
+                                       BLACK, GROUND_DITHER_DENSITY);
         }
         if (horse != NULL) {
-            DrawRectangle(horse->position.x - HORSE_SIZE / 2,
-                          horse->position.y - HORSE_SIZE / 2, HORSE_SIZE,
-                          HORSE_SIZE, BROWN);
+            DrawCheckerboardRectangleV((Vector2){horse->position.x - HORSE_SIZE / 2,
+                                                  horse->position.y - HORSE_SIZE / 2},
+                                       (Vector2){HORSE_SIZE, HORSE_SIZE},
+                                       BLACK, HORSE_DITHER_DENSITY);
         }
         DrawRectangle(player->position.x - PLAYER_SIZE / 2,
                       player->position.y - PLAYER_SIZE / 2, PLAYER_SIZE,
@@ -431,6 +526,11 @@ int main(int argc, char *argv[]) {
         }
         EndDrawing();
     }
+    
+    UnloadSound(jump);
+    UnloadSound(annihilator);
+    ClosePhysics();
+    CloseAudioDevice();
 
     CloseWindow();
 
