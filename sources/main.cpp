@@ -302,7 +302,7 @@ int main(int argc, char *argv[]) {
     Sound annihilator = LoadSound("horse.wav");
     Sound death = LoadSound("biteof87.wav");
 
-    int level = 5;
+    int level = 1;
 
     if (argc > 1) {
         int argLevel = atoi(argv[1]);
@@ -464,9 +464,6 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        // printf("Player position: x=%f, y=%f\n", player->position.x,
-        //        player->position.y);
-
         // draw ground
         for (PhysicsBody surface : levelSurfaces) {
             if (!surface)
@@ -514,20 +511,16 @@ int main(int argc, char *argv[]) {
                 if (body != NULL) {
                     int vertexCount = GetPhysicsShapeVerticesCount(i);
                     for (int j = 0; j < vertexCount; j++) {
-                        // Get physics bodies shape vertices to draw lines
-                        // Note: GetPhysicsShapeVertex() already calculates
-                        // rotation transformations
                         Vector2 vertexA = GetPhysicsShapeVertex(body, j);
 
                         int jj = (((j + 1) < vertexCount)
                                       ? (j + 1)
-                                      : 0); // Get next vertex or first to close
-                                            // the shape
+                                      : 0); 
                         Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
 
                         DrawLineV(
                             vertexA, vertexB,
-                            GREEN); // Draw a line between two vertex positions
+                            GREEN); 
                     }
                 }
             }
