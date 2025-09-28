@@ -342,9 +342,10 @@ int main(int argc, char *argv[]) {
             printf("Reset!\n");
             SetInitialPositions();
         } else if (activeBody->position.y >= SCREEN_HEIGHT) {
-            SetInitialPositions();
-            printf("You died!\n");
             PlaySound(death);
+            printf("You died!\n");
+            // WaitTime(2.0f);
+            SetInitialPositions();
         } else if (activeBody->position.x >=
                    SCREEN_WIDTH - (onHorse ? HORSE_SIZE : PLAYER_SIZE)) {
             level++;
@@ -352,12 +353,19 @@ int main(int argc, char *argv[]) {
             SetInitialPositions();
             printf("Level %d\n", level);
         } else if (activeBody->position.x <= 0) {
-            level--;
-            if (level < 1)
-                level = 1;
-            ConstructLevel(level);
-            SetInitialPositions();
-            printf("Level %d\n", level);
+            if (debug) {
+                level--;
+                if (level < 1)
+                    level = 1;
+                ConstructLevel(level);
+                SetInitialPositions();
+                printf("Level %d\n", level);
+            } else {
+                PlaySound(death);
+                printf("You died!\n");
+                // WaitTime(2.0f);
+                SetInitialPositions();
+            }
         } else {
             if (activeBody != NULL) {
                 bool grounded = activeBody->isGrounded;
